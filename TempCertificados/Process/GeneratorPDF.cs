@@ -7,35 +7,21 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 
 namespace TempCertificados.Process{
     class GeneratorPDF
     {
 
-        private SheetReader sheetReader;
-        private string img64;
-        private string html;
-        private Image img;
-        private SendEmail se;
+        private readonly SheetReader sheetReader;
+        private readonly string html;
+        private readonly Image img;
 
-        public GeneratorPDF(string sheet, string img64, string html, SendEmail se)
+        public GeneratorPDF(SheetReader sheetReader, Image img, string html)
         {
-            if (sheet== null)
-            {
-                throw new Exception("Planilha não preenchida!");
-            }
-            sheetReader = new SheetReader(sheet);
-            this.img64 = img64;
+
+            this.sheetReader = sheetReader;
             this.html = html;
-            this.se = se;
-            //remove o desnecessario para transformar em bytes 
-            //-> "data:image/jpeg;base64," (23 caracteres)
-            img = Image.GetInstance(Convert.FromBase64String(img64.Remove(0, 23)));
-            img.SetAbsolutePosition(0, 0);
-            img.ScaleAbsolute(PageSize.A4.Height, PageSize.A4.Width);
-            img.Alignment = Image.UNDERLYING;
+            this.img = img;
         }
 
         private string ReplaceTags(int row)
@@ -43,7 +29,8 @@ namespace TempCertificados.Process{
             var result = html;
 
             Regex rCheck = new Regex(@"\{\{(\w+)\}\}");
-            var tagsInside = Array.FindAll(sheetReader.Tags, x => html.Contains("{{" + x + "}}"));
+            var tagsInside = Array.FindAll(sheetReader.Tags,
+                                           x => html.Contains("{{" + x + "}}"));
             var matches = rCheck.Matches(html);
 
             foreach(Match m in matches)
@@ -61,31 +48,28 @@ namespace TempCertificados.Process{
 
             foreach (var tag in tagsInside)
             {
-                result = result.Replace("{{" + tag + "}}", sheetReader.GetTagColumn(tag)[row]);
+                result = result.Replace("{{" + tag + "}}",
+                                        sheetReader.GetTagColumn(tag)[row]);
             }
             
             return result;
         }
 
-        public async Task CreateAndSendPDFs()
+        public List<byte []> CreatePDFs()
         {
             var nPersons = sheetReader.TotalRows - 1;
             var tags = sheetReader.Tags;
-            var firstDatas = sheetReader.GetTagColumn(tags[0]);
-            var emails = sheetReader.GetTagColumn("Email");
-            if (emails == null)
-            {
-                throw new Exception("Não foi possível identificar o cabeçalho de Email.");
-            }
+
+            var listaPDF = new List<byte[]>();
             for (int i = 0; i < nPersons; i++)
             {
-                var firstData = firstDatas[i];
-                await CreateAndSendPDF(firstData, emails[i], ReplaceTags(i));
-
+                listaPDF.Add(CreatePDF(ReplaceTags(i)));
             }
+
+            return listaPDF;
         }
 
-        private async Task CreateAndSendPDF(string name,string email, string htmlReplaced)
+        private byte[] CreatePDF(string htmlReplaced)
         {
 
             var document = new Document(PageSize.A4.Rotate(),0,0,0,0);
@@ -105,7 +89,7 @@ namespace TempCertificados.Process{
             htmlWorker.Close();
 
             document.Close();
-            await se.To(email, name, memStream.ToArray());
+            return memStream.ToArray();
         }
     }    
 }

@@ -27,21 +27,19 @@ namespace TempCertificados.Controllers
 
      
         [HttpPost]
-        public async Task<ActionResult> CreatePDF(string sheet,string img, string html)
+        public async Task<ActionResult> CreatePDF(string sheet,string img
+                                                  , string html)
         {
-            var se = new SendEmail(_configuration);
-
             try
             {
-                var pdfGenerator = new GeneratorPDF(sheet, img, html, se);
-                await pdfGenerator.CreateAndSendPDFs();
+                var core = new Core(_configuration, sheet, img, html);
+                await core.Start();
                 return Content("Emails enviados.");
             }
             catch (Exception e)
             {
                 return Content(e.Message);
             }
-          
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
