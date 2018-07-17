@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <PackOnBuild>true</PackOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="itext7" Version="7.1.2" />
+    <PackageReference Include="itext7.pdfhtml" Version="2.0.2" />
+    <PackageReference Include="iTextSharp" Version="5.5.13" />
+    <PackageReference Include="Sendgrid" Version="9.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Home\About.cshtml" />
+    <Content Remove="Views\Home\Contact.cshtml" />
+    <Content Remove="Views\Home\Privacy.cshtml" />
+    <Content Remove="wwwroot\images\depositphotos_81437858-stock-photo-blue-border-a4-size-certificate.jpg" />
+    <Content Remove="wwwroot\images\505846fc1ae4f62.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="teste" />
+    <None Remove="marcelo" />
+    <None Remove="marcelo.pdf" />
+    <None Remove="Abdellatif Bouazza.pdf" />
+    <None Remove="Abdellatif Bouazza.pdf" />
+    <None Remove="Clemente Tiriats.pdf" />
+    <None Remove="Abelardo Gonçalves Pinto.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Process\" />
+    <Folder Include="Process\" />
+  </ItemGroup>
+</Project>

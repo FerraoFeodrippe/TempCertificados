@@ -1,0 +1,157 @@
+﻿@{
+    
+    ViewData["Title"] = "Home Page";
+
+}
+
+    <div style="padding-top:10px">
+        <h4>Área para editar o texto do certificado</h4>
+        <div>Selecione o plano de fundo do certificado<a href="https://materiais.even3.com.br/templates-de-certificados"> [Conheça aqui alguns templates de plano de fundo]</a></div>
+
+         <div class="file-upload">
+             <div class="file-select">
+                 <div class="file-select-button" id="fileName">Escolha a imagem</div>
+                 <div class="file-select-name" id="noFile">Imagem não escolhida...</div>
+                 <input type="file" name="chooseFile" id="chooseFile" accept="image/*">
+             </div>
+         </div>
+
+        <div style="padding-top:20px" >
+            <select onchange="formatDoc('fontsize',this[this.selectedIndex].value);this.selectedIndex=0;">                 <option class="heading" selected>- Tamanho do Texto -</option>                 <option value="1">Pequeno</option>                 <option value="4">Médio</option>                 <option value="7">Grande</option>             </select>
+            <img class="intLink" title="Bold" onclick="formatDoc('bold');" src="data:image/gif;base64,R0lGODlhFgAWAID/AMDAwAAAACH5BAEAAAAALAAAAAAWABYAQAInhI+pa+H9mJy0LhdgtrxzDG5WGFVk6aXqyk6Y9kXvKKNuLbb6zgMFADs=" />
+            <img class="intLink" title="Italic" onclick="formatDoc('italic');" src="data:image/gif;base64,R0lGODlhFgAWAKEDAAAAAF9vj5WIbf///yH5BAEAAAMALAAAAAAWABYAAAIjnI+py+0Po5x0gXvruEKHrF2BB1YiCWgbMFIYpsbyTNd2UwAAOw==" />
+            <img class="intLink" title="Underline" onclick="formatDoc('underline');" src="data:image/gif;base64,R0lGODlhFgAWAKECAAAAAF9vj////////yH5BAEAAAIALAAAAAAWABYAAAIrlI+py+0Po5zUgAsEzvEeL4Ea15EiJJ5PSqJmuwKBEKgxVuXWtun+DwxCCgA7" />
+            <img class="intLink" title="Left align" onclick="formatDoc('justifyleft');" src="data:image/gif;base64,R0lGODlhFgAWAID/AMDAwAAAACH5BAEAAAAALAAAAAAWABYAQAIghI+py+0Po5y02ouz3jL4D4JMGELkGYxo+qzl4nKyXAAAOw==" />
+            <img class="intLink" title="Center align" onclick="formatDoc('justifycenter');" src="data:image/gif;base64,R0lGODlhFgAWAID/AMDAwAAAACH5BAEAAAAALAAAAAAWABYAQAIfhI+py+0Po5y02ouz3jL4D4JOGI7kaZ5Bqn4sycVbAQA7" />
+            <img class="intLink" title="Right align" onclick="formatDoc('justifyright');" src="data:image/gif;base64,R0lGODlhFgAWAID/AMDAwAAAACH5BAEAAAAALAAAAAAWABYAQAIghI+py+0Po5y02ouz3jL4D4JQGDLkGYxouqzl43JyVgAAOw==" />
+
+        </div>
+ 
+        <page contenteditable='true' size='A4' layout='portrait' id='pageA4'>
+            <div style="text-align:center">
+                <font size="1"><br/></font>
+            </div>
+            <div style="text-align: center">
+                <font size="1"><br/></font>
+            </div>
+            <div style="text-align: center">
+                <font size="1"><br /></font>
+            </div>
+            <div style="text-align: center">
+                <font size="1"><br/></font>
+            </div>
+            <div style="text-align:center">
+                <font size="7">Certificado</font>
+            </div>
+            <div style="text-align:center">
+                <font size="4">
+                    Certifico que {{Nome}} participou...
+                </font>
+            </div>
+        </page>
+        
+    </div>
+
+    <div>
+        <h4>Importar participantes</h4>
+        <h3>Selecione as células no excel, copie e as cole aqui</h3>
+        <textarea id="textEdit" style="min-height:500px; max-height:500px; min-width:800px; max-width:800px">
+
+        </textarea>
+    </div>
+
+    <input id="testeB" type="button" value="Enviar por e-mail"/>
+
+<script src="/lib/jquery/dist/jquery.js"></script>
+
+<script type="text/javascript">
+    var oDoc, sDefTxt;
+
+    $(document).ready(function(){
+        initDoc();
+    });      function initDoc() {             oDoc = document.getElementById("pageA4");             sDefTxt = oDoc.innerHTML;     }      function formatDoc(sCmd, sValue) {             document.execCommand(sCmd, false, sValue); oDoc.focus();      }      function setDocMode(bToSource) {             var oContent;             if (bToSource) {                 oContent = document.createTextNode(oDoc.innerHTML);                 oDoc.innerHTML = "";                 var oPre = document.createElement("pre");                 oDoc.contentEditable = false;                 oPre.id = "sourceText";                 oPre.contentEditable = true;                 oPre.appendChild(oContent);                 oDoc.appendChild(oPre);                 document.execCommand("defaultParagraphSeparator", false, "div");             } else {                 if (document.all) {                     oDoc.innerHTML = oDoc.innerText;                 } else {                     oContent = document.createRange();                     oContent.selectNodeContents(oDoc.firstChild);                     oDoc.innerHTML = oContent.toString();                 }                 oDoc.contentEditable = true;             }             oDoc.focus();     }
+</script>
+
+<script type="text/javascript">
+    var canvas;
+    var image;
+
+    $("#chooseFile").change(function() {
+                var filename = $("#chooseFile").val();
+                if (/^\s*$/.test(filename)) {
+                    $(".file-upload").removeClass('active');
+                    $("#noFile").text("Arquivo não escolhido...");
+                }
+                else {
+                    $(".file-upload").addClass('active');
+                    $("#noFile").text(filename.replace("C:\\fakepath\\", ""));
+                }
+                loadImage(this);
+    });
+
+    function loadImage(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        image = new Image();
+                        image.src = e.target.result;
+                        $("#pageA4").css("background-image", 'url("' + image.src + '")');
+                        $("#imgtest").css("background-image", 'url("' + image.src + '")');
+
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+    }
+
+    function setBackgroundImage()
+    {
+        
+    }
+
+    $("#testeB").click(createPDFs);
+
+    function createPDFs()
+    {
+        var htmlPage = $("#pageA4").html();
+        var imgBase64 = image.src;
+        var $sheet =  $('#textEdit').val();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("CreatePDF", "Home")',
+            data: {sheet: $sheet, img: imgBase64, html: htmlPage}, 
+            dataType: 'JSON',
+            sucess: function (res){
+            console.log("OK");
+            console.log(res.message);
+    
+            },
+            error: function (res){
+            console.log("NADA OK");
+            console.log(res.message);
+            }
+        });
+    }
+
+    $('#textEdit').bind('paste', null, function(e){
+        $txt = $(this);
+        
+        var source;
+
+        if (window.clipboardData !== undefined) {
+            source = window.clipboardData
+        } else {
+            source = e.originalEvent.clipboardData;
+        }
+        var data = source.getData("Text");
+        
+        setTimeout(function(){
+          //  var values = data.split(/\s+/);
+          //  var rows =  data.split("\n");
+          //  var row1Colls = rows[3].split("\t");
+            $txt.val(data);
+        }, 100);
+    });
+
+</script>
+
+
