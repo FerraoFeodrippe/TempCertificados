@@ -29,19 +29,17 @@ namespace TempCertificados.Controllers
         [HttpPost]
         public async Task<ActionResult> CreatePDF(string sheet,string img, string html)
         {
-            //HtmlConverter.ConvertToPdf(html,new System.IO.FileStream(
-            //name, System.IO.FileMode.Create));
             var se = new SendEmail(_configuration);
 
             try
             {
                 var pdfGenerator = new GeneratorPDF(sheet, img, html, se);
-                await pdfGenerator.CreatePDFs();
-                return Content(JsonConvert.SerializeObject(new { message = "OK" }), "application/json");
+                await pdfGenerator.CreateAndSendPDFs();
+                return Content("Emails enviados.");
             }
             catch (Exception e)
             {
-                return Content(JsonConvert.SerializeObject(new { message = e.Message }), "application/json");
+                return Content(e.Message);
             }
           
         }

@@ -28,6 +28,10 @@ namespace TempCertificados.Process
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             msg.AddAttachment("Certificado - "+ name +".pdf", attachmentString);
             var response = await client.SendEmailAsync(msg);
+            if (response.StatusCode != System.Net.HttpStatusCode.Accepted)
+            {
+                throw new Exception(response.StatusCode.ToString());
+            }
 
         }
 

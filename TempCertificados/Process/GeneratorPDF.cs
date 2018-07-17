@@ -22,6 +22,10 @@ namespace TempCertificados.Process{
 
         public GeneratorPDF(string sheet, string img64, string html, SendEmail se)
         {
+            if (sheet== null)
+            {
+                throw new Exception("Planilha não preenchida!");
+            }
             sheetReader = new SheetReader(sheet);
             this.img64 = img64;
             this.html = html;
@@ -49,13 +53,11 @@ namespace TempCertificados.Process{
                 if (!exists) 
                 {
                     throw new Exception(
-                        string.Format("Não foi possível identificar o cabeçalho com a tag {0} posta no texto",
+                        string.Format("Não foi possível identificar o cabeçalho com a tag {{{{{0}}}}} posta no texto",
                                       value));
                 }
 
             }
-
-
 
             foreach (var tag in tagsInside)
             {
@@ -65,27 +67,28 @@ namespace TempCertificados.Process{
             return result;
         }
 
-        public async Task CreatePDFs()
+        public async Task CreateAndSendPDFs()
         {
             var nPersons = sheetReader.TotalRows - 1;
             var tags = sheetReader.Tags;
             var firstDatas = sheetReader.GetTagColumn(tags[0]);
             var emails = sheetReader.GetTagColumn("Email");
+            if (emails == null)
+            {
+                throw new Exception("Não foi possível identificar o cabeçalho de Email.");
+            }
             for (int i = 0; i < nPersons; i++)
             {
                 var firstData = firstDatas[i];
-                await CreatePDF(firstData, emails[i], ReplaceTags(i));
+                await CreateAndSendPDF(firstData, emails[i], ReplaceTags(i));
 
             }
         }
 
-        private async Task CreatePDF(string name,string email, string htmlReplaced)
+        private async Task CreateAndSendPDF(string name,string email, string htmlReplaced)
         {
 
             var document = new Document(PageSize.A4.Rotate(),0,0,0,0);
-            //caso queira fazer futuros testes para visualizar no propiro computador
-            //var file = new FileStream(name, FileMode.Create);
-            //var writer = PdfWriter.GetInstance(document, file);
             MemoryStream memStream = new MemoryStream();
             var writer = PdfWriter.GetInstance(document, memStream);
             var htmlReader = new StringReader(htmlReplaced);
@@ -102,7 +105,6 @@ namespace TempCertificados.Process{
             htmlWorker.Close();
 
             document.Close();
-            //file.Close();
             await se.To(email, name, memStream.ToArray());
         }
     }    

@@ -120,14 +120,9 @@
             url: '@Url.Action("CreatePDF", "Home")',
             data: {sheet: $sheet, img: imgBase64, html: htmlPage}, 
             dataType: 'JSON',
-            sucess: function (res){
-            console.log("OK");
-            console.log(res.message);
-    
-            },
-            error: function (res){
-            console.log("NADA OK");
-            console.log(res.message);
+            complete: function (res)
+            {
+                alert(res.responseText);
             }
         });
     }
