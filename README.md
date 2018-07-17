@@ -9,7 +9,7 @@ Foi utilizado o [Visual Studio for mac](https://visualstudio.microsoft.com/vs/ma
 
 ### Instalando e rodando
 
-Apos seguir os passos para configuração inicial é necessário adicionar pacotes NuGet no projeto (veja [aqui] (https://docs.microsoft.com/pt-br/visualstudio/mac/nuget-walkthrough)).
+Apos seguir os passos para configuração inicial é necessário adicionar pacotes NuGet no projeto (veja [aqui](https://docs.microsoft.com/pt-br/visualstudio/mac/nuget-walkthrough)).
 
 Para este projeto foram utilizados os seguintes:
 
