@@ -18,10 +18,6 @@ Para este projeto foram utilizados os seguintes:
 
 Antes de iniciar o projeto no arquivo appsettings.json e colocar a sua API_KEY onde necessário lá no lugar de "PUT_YOUR_API_KEY_HERE" por sua chave "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
-´´´
+```
 "SENDGRID_API_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
-´´´
-
-## Authors
-
-* **Marcelo Ferrão Feodrippe**
+```
