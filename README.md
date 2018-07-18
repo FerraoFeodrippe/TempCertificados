@@ -16,7 +16,7 @@ Para este projeto foram utilizados os seguintes:
 * iTextSharp (para criação de pdfs)
 * Sendgrid (para envio dos e-mails, API [aqui](https://sendgrid.com/docs/API_Reference/index.html))
 
-Antes de iniciar o projeto no arquivo appsettings.json e colocar a sua API_KEY onde necessário lá no lugar de "PUT_YOUR_API_KEY_HERE" por sua chave "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+Antes de rodar o projeto, ir no arquivo appsettings.json e colocar a sua API_KEY onde necessário lá no lugar de "PUT_YOUR_API_KEY_HERE" por sua chave "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 ```
 "SENDGRID_API_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
