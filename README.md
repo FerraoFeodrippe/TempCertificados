@@ -21,3 +21,5 @@ Antes de iniciar o projeto no arquivo appsettings.json e colocar a sua API_KEY o
 ```
 "SENDGRID_API_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
 ```
+
+Agora só resta fazer o download do repositorio e abrir o projeto pelo Visual Studio.
